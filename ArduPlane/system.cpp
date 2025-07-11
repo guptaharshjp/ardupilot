@@ -14,7 +14,7 @@ void Plane::init_ardupilot()
 
     rollController.convert_pid();
     pitchController.convert_pid();
-
+ 
     // initialise rc channels including setting mode
     // CONVERSION: Added for upgrade to ArduPlane 4.2, Sep 2021
 #if HAL_QUADPLANE_ENABLED

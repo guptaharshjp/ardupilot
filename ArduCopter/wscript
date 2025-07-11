@@ -16,6 +16,7 @@ def build(bld):
             'AP_Camera',
             'AP_IRLock',
             'AP_Motors',
+            'NewDirectory',
             'AP_Avoidance',
             'AP_AdvancedFailsafe',
             'AP_SmartRTL',

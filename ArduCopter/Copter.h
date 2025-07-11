@@ -176,6 +176,7 @@
 #include "UserParameters.h"
 #endif
 #include "mode.h"
+#include "NewDirectory/NewClass.h"
 
 class Copter : public AP_Vehicle {
 public:
@@ -185,6 +186,7 @@ public:
     friend class Parameters;
     friend class ParametersG2;
     friend class AP_Avoidance_Copter;
+    friend class NewClass;
 
 #if AP_COPTER_ADVANCED_FAILSAFE_ENABLED
     friend class AP_AdvancedFailsafe_Copter;
@@ -237,6 +239,8 @@ private:
 
     // key aircraft parameters passed to multiple libraries
     AP_MultiCopter aparm;
+    NewClass new_class_instance;
+
 
     // Global parameters are all contained within the 'g' class.
     Parameters g;
@@ -353,7 +357,7 @@ private:
     // state about the Copter.  It replaces a global variable which was
     // used to track this state.
     uint32_t ap_value() const;
-
+   
     // These variables are essentially global variables.  These should
     // be removed over time.  It is critical that the offsets of these
     // variables remain unchanged - the logging is dependent on this

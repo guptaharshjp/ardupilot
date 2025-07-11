@@ -113,6 +113,9 @@ SCHED_TASK_CLASS arguments:
 const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     // update INS immediately to get current gyro data populated
     FAST_TASK_CLASS(AP_InertialSensor, &copter.ins, update),
+    SCHED_TASK_CLASS(NewClass, &copter.new_class_instance, update, 1, 100, 170),
+
+
     // run low level rate controllers that only require IMU data
     FAST_TASK(run_rate_controller_main),
 #if AC_CUSTOMCONTROL_MULTI_ENABLED

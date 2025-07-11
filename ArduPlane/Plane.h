@@ -192,7 +192,7 @@ private:
 
     // key aircraft parameters passed to multiple libraries
     AP_FixedWing aparm;
-
+    
     // Global parameters are all contained within the 'g' and 'g2' classes.
     Parameters g;
     ParametersG2 g2;
