@@ -355,12 +355,15 @@ bool GCS_MAVLINK_Copter::try_send_message(enum ap_message id)
 #endif
         break;
     }
-
+    case MSG_MY_TEST:
+        send_my_test_message();
+        break;
     default:
         return GCS_MAVLINK::try_send_message(id);
     }
     return true;
 }
+
 
 
 MISSION_STATE GCS_MAVLINK_Copter::mission_state(const class AP_Mission &mission) const
@@ -422,7 +425,6 @@ void GCS_MAVLINK_Copter::handle_command_ack(const mavlink_message_t &msg)
     copter.command_ack_counter++;
     GCS_MAVLINK::handle_command_ack(msg);
 }
-
 /*
   handle a LANDING_TARGET command. The timestamp has been jitter corrected
 */
@@ -1344,6 +1346,18 @@ void GCS_MAVLINK_Copter::send_wind() const
         degrees(atan2f(-wind.y, -wind.x)),
         wind.length(),
         wind.z);
+}
+
+// my test message --------------------------
+
+void GCS_MAVLINK::send_my_test_message()
+{
+    printf("42,4.125\n");  //DEBUG
+    // mavlink_my_test_message_t msg = {};
+    // msg.id = 42;
+    // msg.value = 3.1415;
+
+    mavlink_msg_my_test_message_send(chan, 42,  3.1415);
 }
 
 #if HAL_HIGH_LATENCY2_ENABLED

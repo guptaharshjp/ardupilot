@@ -175,7 +175,7 @@ class GCS_MAVLINK
 {
 public:
     friend class GCS;
-
+    void send_my_test_message();
     GCS_MAVLINK(AP_HAL::UARTDriver &uart);
     virtual ~GCS_MAVLINK() {}
 

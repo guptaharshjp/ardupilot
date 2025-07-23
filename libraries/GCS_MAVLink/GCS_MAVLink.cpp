@@ -191,4 +191,6 @@ HAL_Semaphore &comm_chan_lock(mavlink_channel_t chan)
     return chan_locks[uint8_t(chan)];
 }
 
+
+
 #endif  // HAL_GCS_ENABLED

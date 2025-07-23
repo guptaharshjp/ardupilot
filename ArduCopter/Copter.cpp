@@ -818,6 +818,10 @@ void Copter::one_hz_loop()
         }
     }
 #endif
+
+    // ✅ Your Custom MAVLink Message Call (called once every second)
+    gcs().send_message(MSG_MY_TEST);
+
 }
 
 void Copter::init_simple_bearing()
