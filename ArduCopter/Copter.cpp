@@ -731,6 +731,8 @@ void Copter::three_hz_loop()
 {
     // check if we've lost contact with the ground station
     failsafe_gcs_check();
+    
+    gcs().send_message(MSG_TEMP_HUMIDITY);  //Used enum value, not MAVLINK ID
 
     // check if we've lost terrain data
     failsafe_terrain_check();
@@ -818,10 +820,6 @@ void Copter::one_hz_loop()
         }
     }
 #endif
-
-    // ✅ Your Custom MAVLink Message Call (called once every second)
-    gcs().send_message(MSG_MY_TEST);
-
 }
 
 void Copter::init_simple_bearing()

@@ -29,6 +29,8 @@ This provides some support code and variables for MAVLink enabled sketches
 
 #include <AP_Common/AP_Common.h>
 #include <AP_HAL/AP_HAL.h>
+void send_temp_humidity(mavlink_channel_t chan);
+
 
 extern const AP_HAL::HAL& hal;
 
@@ -191,6 +193,15 @@ HAL_Semaphore &comm_chan_lock(mavlink_channel_t chan)
     return chan_locks[uint8_t(chan)];
 }
 
-
+void send_temp_humidity(mavlink_channel_t chan)
+{
+    printf("Hello World");
+    mavlink_msg_temp_humidity_send(
+        chan,
+        AP_HAL::millis(),       // time_boot_ms
+        3276.5,           // temperature (float)
+        580987654.7            // humidity (float)
+    );
+}
 
 #endif  // HAL_GCS_ENABLED

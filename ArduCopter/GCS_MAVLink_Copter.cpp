@@ -2,6 +2,9 @@
 
 #include "GCS_MAVLink_Copter.h"
 #include <AP_RPM/AP_RPM_config.h>
+// at the top of GCS_MAVLink_Copter.cpp
+void send_temp_humidity(mavlink_channel_t chan);
+
 #include <AP_EFI/AP_EFI_config.h>
 
 MAV_TYPE GCS_Copter::frame_type() const
@@ -355,9 +358,13 @@ bool GCS_MAVLINK_Copter::try_send_message(enum ap_message id)
 #endif
         break;
     }
-    case MSG_MY_TEST:
-        send_my_test_message();
+
+    // Your custom message handler
+    case MSG_TEMP_HUMIDITY:
+        CHECK_PAYLOAD_SIZE(TEMP_HUMIDITY);
+        send_temp_humidity(chan);
         break;
+
     default:
         return GCS_MAVLINK::try_send_message(id);
     }
@@ -1346,18 +1353,6 @@ void GCS_MAVLINK_Copter::send_wind() const
         degrees(atan2f(-wind.y, -wind.x)),
         wind.length(),
         wind.z);
-}
-
-// my test message --------------------------
-
-void GCS_MAVLINK::send_my_test_message()
-{
-    printf("42,4.125\n");  //DEBUG
-    // mavlink_my_test_message_t msg = {};
-    // msg.id = 42;
-    // msg.value = 3.1415;
-
-    mavlink_msg_my_test_message_send(chan, 42,  3.1415);
 }
 
 #if HAL_HIGH_LATENCY2_ENABLED

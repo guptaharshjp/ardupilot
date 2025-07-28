@@ -13,7 +13,7 @@
 
 enum ap_message : uint8_t {
     MSG_HEARTBEAT,
-    MSG_MY_TEST,
+    MSG_TEMP_HUMIDITY,  // <--- Added this
 #if AP_AHRS_ENABLED
     MSG_AHRS,
     MSG_AHRS2,
