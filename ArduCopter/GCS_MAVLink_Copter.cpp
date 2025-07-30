@@ -1247,7 +1247,7 @@ void GCS_MAVLINK_Copter::handle_message_set_position_target_global_int(const mav
 
 void GCS_MAVLINK_Copter::handle_message(const mavlink_message_t &msg)
 {
-
+    //::printf("DEBUG: Message received with ID: %d\n", msg.msgid);  // Debug line added
     switch (msg.msgid) {
 #if MODE_GUIDED_ENABLED
     case MAVLINK_MSG_ID_SET_ATTITUDE_TARGET:
@@ -1271,12 +1271,18 @@ void GCS_MAVLINK_Copter::handle_message(const mavlink_message_t &msg)
         copter.g2.toy_mode.handle_message(msg);
         break;
 #endif
+
+    // ✅ Your custom message from GCS
+    case MAVLINK_MSG_ID_GCS_COMMAND:
+        ::printf("Received GCS_COMMAND (switch matched)\n");
+        handle_gcs_command(msg);
+        break;
+
     default:
         GCS_MAVLINK::handle_message(msg);
         break;
     }
 }
-
 MAV_RESULT GCS_MAVLINK_Copter::handle_flight_termination(const mavlink_command_int_t &packet) {
 #if AP_COPTER_ADVANCED_FAILSAFE_ENABLED
     if (GCS_MAVLINK::handle_flight_termination(packet) == MAV_RESULT_ACCEPTED) {

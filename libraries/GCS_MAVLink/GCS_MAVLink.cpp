@@ -29,6 +29,7 @@ This provides some support code and variables for MAVLink enabled sketches
 
 #include <AP_Common/AP_Common.h>
 #include <AP_HAL/AP_HAL.h>
+void handle_gcs_command(const mavlink_message_t &msg);
 
 extern const AP_HAL::HAL& hal;
 
@@ -189,6 +190,24 @@ void comm_send_unlock(mavlink_channel_t chan_m)
 HAL_Semaphore &comm_chan_lock(mavlink_channel_t chan)
 {
     return chan_locks[uint8_t(chan)];
+}
+
+// MY ADDITION: Handle GCS command messages
+void GCS_MAVLINK::handle_gcs_command(const mavlink_message_t &msg)
+{
+    mavlink_gcs_command_t packet;
+    mavlink_msg_gcs_command_decode(&msg, &packet);
+
+    ::printf("GCS_COMMAND received:\n");
+    ::printf("  Time Boot MS: %u\n", packet.time_boot_ms);
+    ::printf("  Command Type: %u\n", packet.command_type);
+    if (packet.command_type == 1) {
+        ::printf("  -> Action 145 triggered!\n");
+    } else if (packet.command_type == 2) {
+        ::printf("  -> Action 2 triggered!\n");
+    } else {
+        ::printf("  -> Unknown command!\n");
+    }
 }
 
 #endif  // HAL_GCS_ENABLED

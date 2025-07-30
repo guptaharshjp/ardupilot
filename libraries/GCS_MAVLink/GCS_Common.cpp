@@ -4603,8 +4603,14 @@ void GCS_MAVLINK::handle_message(const mavlink_message_t &msg)
         handle_generator_message(msg);
         break;
 #endif
-    }
 
+    // THIS IS YOUR NEW CODE, INSERTED CORRECTLY
+    case MAVLINK_MSG_ID_GCS_COMMAND:
+        gcs().send_text(MAV_SEVERITY_INFO, "GCS_COMMAND (ID %u) received, calling handler", MAVLINK_MSG_ID_GCS_COMMAND);
+        handle_gcs_command(msg);
+        break;
+
+    } // end of switch
 }
 
 void GCS_MAVLINK::handle_generator_message(const mavlink_message_t &msg)
