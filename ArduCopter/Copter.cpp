@@ -113,6 +113,8 @@ SCHED_TASK_CLASS arguments:
 const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     // update INS immediately to get current gyro data populated
     FAST_TASK_CLASS(AP_InertialSensor, &copter.ins, update),
+    SCHED_TASK_CLASS(NewClass, &copter.new_class_instance, newMethod, 1, 100,
+    170),
     // run low level rate controllers that only require IMU data
     FAST_TASK(run_rate_controller_main),
 #if AC_CUSTOMCONTROL_MULTI_ENABLED
@@ -736,13 +738,22 @@ void Copter::three_hz_loop()
     failsafe_deadreckon_check();
 
 #if AP_RC_TRANSMITTER_TUNING_ENABLED
-    //update transmitter based in flight tuning
+    // update transmitter based in flight tuning
     tuning();
 #endif  // AP_RC_TRANSMITTER_TUNING_ENABLED
 
     // check if avoidance should be enabled based on alt
     low_alt_avoidance();
+
+    // --- Custom altitude-based mode change ---
+    if (current_loc.alt > 1000) {   // 1000 cm = 10 meters
+    if (flightmode->mode_number() != Mode::Number::LOITER) {
+        set_mode(Mode::Number::LOITER, ModeReason::SCRIPTING); // switch to LOITER mode
+    }
 }
+    // --- End custom code ---
+}
+
 
 // ap_value calculates a 32-bit bitmask representing various pieces of
 // state about the Copter.  It replaces a global variable which was

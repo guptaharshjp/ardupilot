@@ -76,6 +76,7 @@
 // Configuration
 #include "defines.h"
 #include "config.h"
+#include "NewDirectory/NewClass.h"
 
 #if FRAME_CONFIG == HELI_FRAME
  #define MOTOR_CLASS AP_MotorsHeli
@@ -202,6 +203,7 @@ public:
 
     friend class Mode;
     friend class ModeAcro;
+    friend class NewClass; // NewClass is a placeholder for any new class that might be added later
     friend class ModeAcro_Heli;
     friend class ModeAltHold;
     friend class ModeAuto;
@@ -242,6 +244,7 @@ private:
     // Global parameters are all contained within the 'g' class.
     Parameters g;
     ParametersG2 g2;
+    NewClass new_class_instance; 
 
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;

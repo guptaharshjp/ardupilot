@@ -22,6 +22,7 @@ def build(bld):
             'AP_Winch',
             'AP_LTM_Telem',
             'AP_Devo_Telem',
+            'NewDirectory',  # New directory for new classes
             'AC_AutoTune',
             'AP_KDECAN',
             'AP_SurfaceDistance'

@@ -749,6 +749,26 @@ class AutoTestCopter(vehicle_test_suite.TestSuite):
             self.disarm_vehicle(force=True)
             self.reboot_sitl()
             raise ex
+        # Ensure we are disarmed and GCS failsafe is disabled
+    def test_altitude_mode_switch(self):
+        '''Test switching between AltHold and Loiter modes'''
+        self.progress("Starting Altitude Mode Switch Test")
+
+        # Takeoff to 10m
+        self.takeoff(alt=10)
+
+        # Switch to AltHold
+        self.set_mode("ALT_HOLD")
+        self.wait_seconds(5)
+
+        # Switch to Loiter
+        self.set_mode("LOITER")
+        self.wait_seconds(5)
+
+        # Land
+        self.land_and_disarm()
+        self.progress("Altitude Mode Switch Test Completed")
+
 
     def test_gcs_failsafe(self, side=60, timeout=360):
         # Test double-SmartRTL; ensure we do SmarRTL twice rather than
