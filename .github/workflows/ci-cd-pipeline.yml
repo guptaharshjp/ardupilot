@@ -2,9 +2,9 @@ name: ArduPilot Firmware CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, feature/ci-cd-pipeline ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, feature/ci-cd-pipeline ]
   workflow_dispatch:
 
 env:
@@ -318,9 +318,51 @@ jobs:
           Tools/autotest/replay_logs/
         retention-days: 30
 
+
+  build-macos:
+    runs-on: macos-13
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        vehicle: [copter, plane, rover]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies via Homebrew
+      run: |
+        brew update
+        brew install python@3.10 gcc || true
+        brew link --overwrite python@3.10 || true
+    - name: Install Python dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install wheel setuptools
+        python3 -m pip install MAVProxy pymavlink future lxml empy==3.3.4
+    - name: Initialize submodules
+      run: |
+        git submodule sync --recursive
+        git submodule update --init --recursive --jobs=4
+    - name: Build ${{ matrix.vehicle }} for macOS
+      run: |
+        export CC=gcc CXX=g++
+        python3 waf configure --board sitl --debug
+        python3 waf build --target bin/ardu${{ matrix.vehicle }}
+    - name: Upload macOS binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: macos-${{ matrix.vehicle }}-binary
+        path: build/sitl/bin/ardu${{ matrix.vehicle }}
+        retention-days: 7
   collect-results:
     runs-on: ubuntu-22.04
-    needs: [build-sitl, build-hardware, run-unit-tests, run-sitl-tests, run-replay-tests]
+    needs: [build-sitl, build-hardware, build-macos, run-unit-tests, run-sitl-tests, run-replay-tests]
     if: always()
 
     steps:
